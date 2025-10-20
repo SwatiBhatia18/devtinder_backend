@@ -1,29 +1,23 @@
 const express = require("express")
 const app = express()
 
-// only for this particular route /user
-app.get(
-  "/user",
-  [(req, res, next) => {
-    console.log("First handler for /user")
+app.use("/admin", (req, res, next) => {
+  const token = 123
+  const isAuthenticate = token === 123
+  if (!isAuthenticate) {
+    res.status(401).send("Unauthorized User")
+  } else {
     next()
-    // res.send("First handler for /user")
-  },
-  (req, res, next) => {
-    console.log("Second handler for /user")
-    next()
-  },
-  (req, res, next) => {
-    console.log("Third handler for /user")
-    next()
-  }],
-  (req, res, next) => {
-    console.log("Fourth handler for /user")
-    res.send("Fourth handler for /user")
   }
-)
+})
 
-// Calling next() when there are no more handlers is harmless. Express will just finish; nothing else happens. So your code runs, logs the four messages, sends the response, and exits cleanly.
+app.get("/admin/getAllAdmin", (req, res, next) => {
+  res.send("Get All Admin handler")
+})
+
+app.get("/admin/deleteAdmin", (req, res, next) => {
+  res.send("Delete Admin handler")
+})
 
 app.listen(7777, () => {
   console.log("Server is running on port 7777")
