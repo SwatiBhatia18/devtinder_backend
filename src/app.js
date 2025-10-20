@@ -1,14 +1,15 @@
 const express = require("express")
 const app = express()
 
-app.get("/admin/getAllAdmin", (req, res, next) => {
-  console.log("Inside first admin route")
-  next()
+app.get("/getAllUser", (req, res, next) => {
+  throw new Error("Some error occurred while fetching users")
+  res.send("List of all users")
 })
 
-app.get("/admin/getAllAdmin", (req, res, next) => {
-  console.log("Inside second admin route")
-  res.send("second admin route")
+app.use((err, req, res, next) => {
+  console.error(err.stack)
+  if(err)
+  res.status(500).send("Something broke!")
 })
 
 app.listen(7777, () => {
