@@ -1,13 +1,12 @@
 const express = require("express")
 const app = express()
 
-app.use((err, req, res, next) => {
-  console.error(err.stack)
-  if (err) res.status(500).send("Something broke using err !")
+app.get("/getAllUser", (req, res, next) => {
+  throw new Error("Some error occurred while fetching users")
 })
 
-app.get("/getAllUser", (req, res, next) => {
-    throw new Error("Some error occurred while fetching users")
+app.use("/", (err, req, res, next) => {
+  if (err) res.status(500).send("Something broke using err !")
 })
 
 app.listen(7777, () => {
