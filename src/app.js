@@ -4,7 +4,7 @@ const app = express()
 // only for this particular route /user
 app.get(
   "/user",
-  (req, res, next) => {
+  [(req, res, next) => {
     console.log("First handler for /user")
     next()
     // res.send("First handler for /user")
@@ -19,12 +19,12 @@ app.get(
   },
   (req, res, next) => {
     console.log("Fourth handler for /user")
-    // res.send("Fourth handler for /user")
+    res.send("Fourth handler for /user")
     next()
-  }
+  }]
 )
 
-// Error handling middleware => cannot get /user as next() is not able to find next route handler
+// Calling next() when there are no more handlers is harmless. Express will just finish; nothing else happens. So your code runs, logs the four messages, sends the response, and exits cleanly.
 
 app.listen(7777, () => {
   console.log("Server is running on port 7777")
