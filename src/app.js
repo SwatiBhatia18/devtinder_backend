@@ -6,9 +6,9 @@ app.get(
   "/user",
   (req, res, next) => {
     console.log("First handler for /user")
-    next()
+    // next()
     console.log("First handler for after next")
-    res.send("First handler for /user")
+    // res.send("First handler for /user")
   },
   (req, res, next) => {
     console.log("Second handler for /user")
