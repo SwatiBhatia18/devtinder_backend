@@ -16,12 +16,11 @@ app.get(
   (req, res, next) => {
     console.log("Third handler for /user")
     next()
-  },
+  }],
   (req, res, next) => {
     console.log("Fourth handler for /user")
     res.send("Fourth handler for /user")
-    next()
-  }]
+  }
 )
 
 // Calling next() when there are no more handlers is harmless. Express will just finish; nothing else happens. So your code runs, logs the four messages, sends the response, and exits cleanly.
