@@ -16,6 +16,28 @@ app.post("/signup", async (req, res) => {
   }
 })
 
+app.get("/user", async (req, res) => {
+  try {
+    console.log(req.body.email)
+    //  const users = await User.findById(req.body.id)
+    const users = await User.find({
+      email: req.body.email,
+    })
+    res.send(users)
+  } catch (err) {
+    res.status(400).send("Error fetching users" + err.message)
+  }
+})
+
+app.get("/feed", async (req, res) => {
+  try {
+    const users = await User.find({})
+    res.send(users)
+  } catch (err) {
+    res.status(400).send("Error fetching users" + err.message)
+  }
+})
+
 connectDB()
   .then(() => {
     console.log("Database connected successfully")
