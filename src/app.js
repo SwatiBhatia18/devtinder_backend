@@ -4,15 +4,10 @@ const User = require("./models/user")
 
 const app = express()
 
+app.use(express.json()) // middleware to parse JSON bodies into JS objects and embed it in req.body
+
 app.post("/signup", async (req, res) => {
-  const user = new User({
-    firstName: "Vanshika",
-    lastName: "Bhatia",
-    email: "vani@example.com",
-    password: "password123",
-    age: 27,
-    gender: "Female",
-  })
+  const user = new User(req.body)
   try {
     await user.save()
     res.send("User saved successfully")
