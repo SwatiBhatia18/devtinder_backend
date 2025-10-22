@@ -41,11 +41,9 @@ app.post("/login", async (req, res) => {
     if (!user) {
       throw new Error("Invalid credentials")
     }
-    const isPasswordValid = await bcrypt.compare(password, user.password)
+    const isPasswordValid = await user.validatePassword(password)
     if (isPasswordValid) {
-      const token = jwt.sign({ _id: user._id }, "devTinder@12345", {
-        expiresIn: "7d", // expires in 7 days
-      })
+      const token = await user.getJWT()
       res.cookie("token", token, {
         expires: new Date(Date.now() + 8 * 3600000),
         secure: true, // 👈 you expect this to enforce HTTPS-only cookies
