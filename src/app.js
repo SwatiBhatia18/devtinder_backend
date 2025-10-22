@@ -12,7 +12,7 @@ app.post("/signup", async (req, res) => {
     await user.save()
     res.send("User saved successfully")
   } catch (err) {
-    res.status(400).send("Error saving user" + err.message)
+    res.status(400).send("Error saving user " + err.message)
   }
 })
 
@@ -56,6 +56,7 @@ app.patch("/user", async (req, res) => {
     // )
     const user = await User.findByIdAndUpdate(req.body.id, req.body, {
       new: false,
+      runValidators: true,
     })
     console.log(user)
     res.send("User updated successfully")
