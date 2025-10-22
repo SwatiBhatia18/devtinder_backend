@@ -54,6 +54,17 @@ app.patch("/user", async (req, res) => {
     //   req.body,
     //   { new: false }
     // )
+    const ALLOWED_UPDATES = ["id", "password", "age", "skills"]
+    const updates = Object.keys(req.body)
+    const isValidOperation = updates.every((update) =>
+      ALLOWED_UPDATES.includes(update)
+    )
+    if (!isValidOperation) {
+      throw new Error("Invalid updates!")
+    }
+    if(req.body.skills.length > 10){
+      throw new Error("A user can have at most 10 skills")
+    }
     const user = await User.findByIdAndUpdate(req.body.id, req.body, {
       new: false,
       runValidators: true,
@@ -61,7 +72,7 @@ app.patch("/user", async (req, res) => {
     console.log(user)
     res.send("User updated successfully")
   } catch (err) {
-    res.status(400).send("Error updating user" + err.message)
+    res.status(400).send("Error updating user - " + err.message)
   }
 })
 
