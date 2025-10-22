@@ -47,14 +47,14 @@ app.delete("/user", async (req, res) => {
   }
 })
 
-app.patch("/user", async (req, res) => {
+app.patch("/user/:userId", async (req, res) => {
   try {
     // const user = await User.findOneAndUpdate(
     //   { email: "vani@example.com" },
     //   req.body,
     //   { new: false }
     // )
-    const ALLOWED_UPDATES = ["id", "password", "age", "skills"]
+    const ALLOWED_UPDATES = ["password", "age", "skills"]
     const updates = Object.keys(req.body)
     const isValidOperation = updates.every((update) =>
       ALLOWED_UPDATES.includes(update)
@@ -65,7 +65,8 @@ app.patch("/user", async (req, res) => {
     if(req.body.skills.length > 10){
       throw new Error("A user can have at most 10 skills")
     }
-    const user = await User.findByIdAndUpdate(req.body.id, req.body, {
+    const userId = req.params?.userId
+    const user = await User.findByIdAndUpdate(userId, req.body, {
       new: false,
       runValidators: true,
     })
