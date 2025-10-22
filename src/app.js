@@ -4,6 +4,7 @@ const User = require("./models/user")
 const bcrypt = require("bcrypt")
 const cookieParser = require("cookie-parser")
 const jwt = require("jsonwebtoken")
+const { useAuth } = require("./middleware/auth")
 
 const saltRounds = 10
 const { validateSignUpData } = require("./utils/validation")
@@ -42,8 +43,15 @@ app.post("/login", async (req, res) => {
     }
     const isPasswordValid = await bcrypt.compare(password, user.password)
     if (isPasswordValid) {
-      const token = jwt.sign({ _id: user._id }, "devTinder@12345")
-      res.cookie("token", token)
+      const token = jwt.sign({ _id: user._id }, "devTinder@12345", {
+        expiresIn: "7d", // expires in 7 days
+      })
+      res.cookie("token", token, {
+        expires: new Date(Date.now() + 8 * 3600000),
+        secure: true, // 👈 you expect this to enforce HTTPS-only cookies
+        httpOnly: true, // 👈 prevents JS access
+        // If you’re testing on localhost (HTTP), browsers make an exception for development convenience.
+      })
       res.send("Login successful")
     } else {
       throw new Error("Invalid credentials")
@@ -66,18 +74,18 @@ app.get("/user", async (req, res) => {
   }
 })
 
-app.get("/profile", async (req, res) => {
+app.get("/profile", useAuth, async (req, res) => {
   try {
-    const token = req.cookies?.token
-    if (!token) {
-      throw new Error("Token Expired")
-    }
-    const decryptedData = jwt.verify(token, "devTinder@12345")
-    const userId = decryptedData._id
-    const user = await User.findById(userId)
-    if (!user) {
-      throw new Error("Token Expired")
-    }
+    const user = req.user
+    res.send(user)
+  } catch (err) {
+    res.status(400).send("ERROR: " + err.message)
+  }
+})
+
+app.get("/sendConnectionRequest", useAuth, (req, res) => {
+  try {
+    const { user } = req
     res.send(user)
   } catch (err) {
     res.status(400).send("ERROR: " + err.message)
