@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const validator = require("validator")
 
 const userSchema = new mongoose.Schema(
   {
@@ -11,7 +12,6 @@ const userSchema = new mongoose.Schema(
       match: [/^[A-Za-z\s]+$/, "First name must contain only alphabets"],
       trim: true, // removes extra spaces
     },
-
     // ✅ Last Name - optional, alphabets only
     lastName: {
       type: String,
@@ -26,7 +26,11 @@ const userSchema = new mongoose.Schema(
       unique: true, // ensures no duplicate email in DB
       lowercase: true, // converts automatically to lowercase
       trim: true,
-      match: [/^\S+@\S+\.\S+$/, "Please enter a valid email address"], // regex for email validation
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("Invalid email format")
+        }
+      },
     },
 
     // ✅ Password - strong password validation
@@ -34,18 +38,22 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Password is required"],
       minlength: [8, "Password must be at least 8 characters long"],
-      validate: {
-        validator: function (v) {
-          // Must have 1 uppercase, 1 lowercase, 1 number, 1 special character
-          return /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/.test(v)
-        },
-        message:
-          "Password must contain at least one uppercase, one lowercase, one number, and one special character",
+      validate(value) {
+        if (!validator.isStrongPassword(value)) {
+          throw new Error(
+            "Weak password - minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1, returnScore: false, pointsPerUnique: 1, pointsPerRepeat: 0.5, pointsForContainingLower: 10, pointsForContainingUpper: 10, pointsForContainingNumber: 10, pointsForContainingSymbol: 10"
+          )
+        }
       },
     },
     photoUrl: {
       type: String,
       default: "https://example.com/default-profile-pic.png",
+      validate(value) {
+        if (!validator.isURL(value)) {
+          throw new Error("Invalid URL for photoUrl")
+        }
+      },
     },
     // ✅ Age - must be between 18 and 65
     age: {
