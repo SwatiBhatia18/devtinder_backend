@@ -69,4 +69,39 @@ requestsRouter.post(
   }
 )
 
+requestsRouter.post("/request/review/:status/:requestId", useAuth, async (req, res) => {
+  try {
+    const { status, requestId } = req.params
+    const loggedInUserId = req.user._id
+
+    // only these two statuses are allowed for reviewing connection requests
+    const allowedStatuses = ["accepted", "rejected"]
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        message: "Invalid status: " + status,
+      })
+    }
+    
+    // check if the connection request exists and is addressed to the logged-in user and is in 'interested' status
+    const connectionRequest = await ConnectionRequest.findOne({
+      _id: requestId,
+      toUserId: loggedInUserId,
+      status: "interested",
+    })
+    if (!connectionRequest) {
+      return res.status(404).json({
+        message: "Connection request not found",
+      })
+    }
+    connectionRequest.status = status
+    await connectionRequest.save()
+    res.json({
+      message: "Connection request " + status,
+      data: connectionRequest,
+    })
+  } catch (err) {
+    res.status(400).send("ERROR: " + err.message)
+  }
+})
+
 module.exports = requestsRouter
