@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema(
       match: [/^[A-Za-z\s]+$/, "Last name must contain only alphabets"],
       trim: true,
     },
+    about: {
+      type: String,
+      maxlength: [500, "About section cannot exceed 500 characters"],
+      trim: true,
+    },
 
     // ✅ Email - must be valid, unique, lowercase
     email: {
@@ -80,13 +85,6 @@ const userSchema = new mongoose.Schema(
         },
         message: "A user can have at most 10 skills",
       },
-    },
-
-    // ✅ Optional: Role field for access control
-    role: {
-      type: String,
-      enum: ["user", "admin", "moderator"],
-      default: "user",
     },
   },
 

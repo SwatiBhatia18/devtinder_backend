@@ -5,14 +5,6 @@ const { useAuth } = require("../middleware/auth")
 
 const requestsRouter = express.Router()
 
-requestsRouter.get("/sendConnectionRequest", useAuth, (req, res) => {
-  try {
-    const { user } = req
-    res.send(user)
-  } catch (err) {
-    res.status(400).send("ERROR: " + err.message)
-  }
-})
 
 requestsRouter.post(
   "/request/send/:status/:userId",
@@ -60,7 +52,7 @@ requestsRouter.post(
 
       const data = await connectionRequest.save()
       res.json({
-        message: "Connection request sent successfully",
+        message: `${fromUserId} sent ${status} connection request to ${toUserId}`,
         data: data,
       })
     } catch (err) {

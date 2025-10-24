@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser")
 const profileRouter = require("./routes/profile")
 const authRouter = require("./routes/auth")
 const requestsRouter = require("./routes/requests")
+const userRouter = require("./routes/user")
 
 const app = express()
 
@@ -13,6 +14,7 @@ app.use(cookieParser()) // middleware to parse cookies from request headers and 
 app.use("/", authRouter)
 app.use("/", profileRouter)
 app.use("/", requestsRouter)
+app.use("/", userRouter)
 
 // app.get("/user", async (req, res) => {
 //   try {
