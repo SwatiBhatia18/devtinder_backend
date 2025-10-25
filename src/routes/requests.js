@@ -52,7 +52,7 @@ requestsRouter.post(
 
       const data = await connectionRequest.save()
       res.json({
-        message: `${fromUserId} sent ${status} connection request to ${toUserId}`,
+        message: `${req.user.firstName} sent ${status} connection request to ${toUser.firstName}`,
         data: data,
       })
     } catch (err) {
