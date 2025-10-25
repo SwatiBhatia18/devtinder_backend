@@ -5,8 +5,17 @@ const profileRouter = require("./routes/profile")
 const authRouter = require("./routes/auth")
 const requestsRouter = require("./routes/requests")
 const userRouter = require("./routes/user")
+const cors = require("cors")
 
 const app = express()
+
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 app.use(express.json()) // middleware to parse JSON bodies into JS objects and embed it in req.body
 app.use(cookieParser()) // middleware to parse cookies from request headers and populate req.cookies

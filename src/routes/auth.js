@@ -43,7 +43,7 @@ authRouter.post("/login", async (req, res) => {
         httpOnly: true, // 👈 prevents JS access
         // If you’re testing on localhost (HTTP), browsers make an exception for development convenience.
       })
-      res.send("Login successful")
+      res.send(user)
     } else {
       throw new Error("Invalid credentials")
     }
