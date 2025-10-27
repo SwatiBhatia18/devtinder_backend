@@ -9,13 +9,12 @@ const cors = require("cors")
 
 const app = express()
 
-
 app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
   })
-);
+)
 
 app.use(express.json()) // middleware to parse JSON bodies into JS objects and embed it in req.body
 app.use(cookieParser()) // middleware to parse cookies from request headers and populate req.cookies
@@ -24,6 +23,17 @@ app.use("/", authRouter)
 app.use("/", profileRouter)
 app.use("/", requestsRouter)
 app.use("/", userRouter)
+
+connectDB()
+  .then(() => {
+    console.log("Database connected successfully")
+    app.listen(7777, () => {
+      console.log("Server is running on port 7777")
+    })
+  })
+  .catch((err) => {
+    console.log("Database connection failed", err)
+  })
 
 // app.get("/user", async (req, res) => {
 //   try {
@@ -85,14 +95,3 @@ app.use("/", userRouter)
 //     res.status(400).send("Error updating user - " + err.message)
 //   }
 // })
-
-connectDB()
-  .then(() => {
-    console.log("Database connected successfully")
-    app.listen(7777, () => {
-      console.log("Server is running on port 7777")
-    })
-  })
-  .catch((err) => {
-    console.log("Database connection failed", err)
-  })

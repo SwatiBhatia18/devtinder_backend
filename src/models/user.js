@@ -5,7 +5,6 @@ const jwt = require("jsonwebtoken")
 
 const userSchema = new mongoose.Schema(
   {
-    // ✅ First Name - must be at least 2 chars, only alphabets allowed
     firstName: {
       type: String,
       required: [true, "First name is required"], // mandatory
@@ -14,7 +13,6 @@ const userSchema = new mongoose.Schema(
       match: [/^[A-Za-z\s]+$/, "First name must contain only alphabets"],
       trim: true, // removes extra spaces
     },
-    // ✅ Last Name - optional, alphabets only
     lastName: {
       type: String,
       match: [/^[A-Za-z\s]+$/, "Last name must contain only alphabets"],
@@ -25,8 +23,6 @@ const userSchema = new mongoose.Schema(
       maxlength: [500, "About section cannot exceed 500 characters"],
       trim: true,
     },
-
-    // ✅ Email - must be valid, unique, lowercase
     email: {
       type: String,
       required: [true, "Email is required"],
@@ -39,8 +35,6 @@ const userSchema = new mongoose.Schema(
         }
       },
     },
-
-    // ✅ Password - strong password validation
     password: {
       type: String,
       required: [true, "Password is required"],
@@ -62,13 +56,11 @@ const userSchema = new mongoose.Schema(
         }
       },
     },
-    // ✅ Age - must be between 18 and 65
     age: {
       type: Number,
       min: [18, "You must be at least 18 years old"],
       max: [65, "Age cannot exceed 65"],
     },
-    // ✅ Gender - only allowed values
     gender: {
       type: String,
       enum: {
@@ -76,7 +68,6 @@ const userSchema = new mongoose.Schema(
         message: "{VALUE} is not a valid gender",
       },
     },
-    // ✅ Skills - must be an array of strings, max 10 skills allowed
     skills: {
       type: [String],
       validate: {
@@ -87,10 +78,10 @@ const userSchema = new mongoose.Schema(
       },
     },
   },
-
-  // ✅ Automatically adds createdAt and updatedAt timestamps
   { timestamps: true }
 )
+
+// methods linked with user 
 
 userSchema.methods.getJWT = async function () {
   const user = this

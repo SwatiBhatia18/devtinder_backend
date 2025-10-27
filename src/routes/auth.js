@@ -1,8 +1,8 @@
 const express = require("express")
 const bcrypt = require("bcrypt")
+const { validateSignUpData } = require("../utils/validation")
 
 const authRouter = express.Router()
-const { validateSignUpData } = require("../utils/validation")
 
 const User = require("../models/user")
 const saltRounds = 10
@@ -38,7 +38,7 @@ authRouter.post("/login", async (req, res) => {
     if (isPasswordValid) {
       const token = await user.getJWT()
       res.cookie("token", token, {
-        expires: new Date(Date.now() + 8 * 3600000),
+        expires: new Date(Date.now() + 8 * 3600000), // after 8 hours 
         secure: true, // 👈 you expect this to enforce HTTPS-only cookies
         httpOnly: true, // 👈 prevents JS access
         // If you’re testing on localhost (HTTP), browsers make an exception for development convenience.
